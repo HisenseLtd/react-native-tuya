@@ -50,7 +50,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
   fun startBluetoothScan(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(TIMEOUT, SCAN_TYPE), params)) {
       TuyaHomeSdk.getBleOperator().startLeScan(
-        params.getInt(TIMEOUT), ScanType.valueOf(params.getString(TIMEOUT))
+        params.getInt(TIMEOUT), params.getString(SCAN_TYPE)?.let { ScanType.valueOf(it) }
       ) { bean ->
         this.reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java).emit(
           ON_SCAN_BEAN_EVENT, TuyaReactUtils.parseToWritableMap(bean)
