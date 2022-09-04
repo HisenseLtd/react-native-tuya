@@ -1,6 +1,6 @@
-import { DeviceBean } from './device';
+import { DeviceBean } from 'device';
 import { NativeModules, Platform } from 'react-native';
-import { DeviceDetailResponse } from './home';
+import { DeviceDetailResponse } from 'home';
 
 const tuya = NativeModules.TuyaActivatorModule;
 const tuyaBLEActivator = NativeModules.TuyaBLEActivatorModule;
@@ -23,6 +23,11 @@ export interface InitBluetoothActivatorParams {
   homeId: number;
   ssid: string;
   password: string;
+}
+
+export interface StartLeScanParams {
+  timeout: number;
+  scan_type: 'SINGLE' | 'SINGLE_QR' | 'MESH' | 'SIG_MESH' | 'NORMAL' | 'TY_BEACON';
 }
 
 export interface InitBluetoothActivatorFromScanBeanParams {
@@ -67,11 +72,11 @@ export function stopConfig() {
   return tuya.stopConfig();
 }
 
-export function startBluetoothScan() {
+export function startBluetoothScan(params: StartLeScanParams) {
   if (Platform.OS === 'ios') {
     return tuyaBLEScanner.startBluetoothScan();
   }
-  return tuya.startBluetoothScan();
+  return tuya.startBluetoothScan(params);
 }
 
 export function initBluetoothDualModeActivator(
