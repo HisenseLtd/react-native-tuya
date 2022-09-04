@@ -3,6 +3,7 @@ package com.tuya.smart.rnsdk.activator
 import android.content.Intent
 import android.provider.Settings
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.tuya.smart.android.ble.api.ScanType
 import com.tuya.smart.android.common.utils.WiFiUtil
 import com.tuya.smart.home.sdk.TuyaHomeSdk
@@ -15,8 +16,10 @@ import com.tuya.smart.rnsdk.utils.Constant.DEVID
 import com.tuya.smart.rnsdk.utils.Constant.HOMEID
 import com.tuya.smart.rnsdk.utils.Constant.MAC
 import com.tuya.smart.rnsdk.utils.Constant.PASSWORD
+import com.tuya.smart.rnsdk.utils.Constant.SCAN_TYPE
 import com.tuya.smart.rnsdk.utils.Constant.SSID
 import com.tuya.smart.rnsdk.utils.Constant.TIME
+import com.tuya.smart.rnsdk.utils.Constant.TIMEOUT
 import com.tuya.smart.rnsdk.utils.Constant.TOKEN
 import com.tuya.smart.rnsdk.utils.Constant.TYPE
 import com.tuya.smart.rnsdk.utils.Constant.UUID
@@ -27,21 +30,34 @@ import com.tuya.smart.sdk.bean.DeviceBean
 import com.tuya.smart.sdk.bean.MultiModeActivatorBean
 import com.tuya.smart.sdk.enums.ActivatorModelEnum
 
+
 class TuyaActivatorModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   var mITuyaActivator: ITuyaActivator? = null
   var mTuyaGWActivator: ITuyaActivator? = null
   var mTuyaCameraActivator: ITuyaCameraDevActivator? = null
+
   override fun getName(): String {
     return "TuyaActivatorModule"
   }
 
+  companion object {
+    const val ON_SCAN_BEAN_EVENT = "ON_SCAN_BEAN_EVENT"
+  }
+
   @ReactMethod
-  fun startBluetoothScan(promise: Promise) {
-    TuyaHomeSdk.getBleOperator().startLeScan(
-      60000, ScanType.SINGLE
-    ) { bean -> promise.resolve(TuyaReactUtils.parseToWritableMap(bean)) };
+  fun startBluetoothScan(params: ReadableMap, promise: Promise) {
+    if (ReactParamsCheck.checkParams(arrayOf(TIMEOUT, SCAN_TYPE), params)) {
+      TuyaHomeSdk.getBleOperator().startLeScan(
+        params.getInt(TIMEOUT), ScanType.valueOf(params.getString(TIMEOUT))
+      ) { bean ->
+        this.reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java).emit(
+          ON_SCAN_BEAN_EVENT, TuyaReactUtils.parseToWritableMap(bean)
+        )
+      };
+      promise.resolve(true)
+    }
   }
 
   @ReactMethod

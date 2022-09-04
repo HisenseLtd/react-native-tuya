@@ -41,6 +41,9 @@ object Constant {
     const val MAC = "mac"
     const val ADDRESS = "address"
 
+    const val TIMEOUT = "timeout"
+    const val SCAN_TYPE = "scanType"
+
     const val DEVID = "devId"
     const val GROUPID = "groupId"
     const val MESHID = "meshId"
