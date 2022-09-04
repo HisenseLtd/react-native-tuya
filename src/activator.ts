@@ -27,7 +27,7 @@ export interface InitBluetoothActivatorParams {
 
 export interface StartLeScanParams {
   timeout: number;
-  scan_type: 'SINGLE' | 'SINGLE_QR' | 'MESH' | 'SIG_MESH' | 'NORMAL' | 'TY_BEACON';
+  scanType: 'SINGLE' | 'SINGLE_QR' | 'MESH' | 'SIG_MESH' | 'NORMAL' | 'TY_BEACON';
 }
 
 export interface InitBluetoothActivatorFromScanBeanParams {
