@@ -9,10 +9,10 @@ export type DeviceBean = {
   verSw: string;
   name: string;
   dps: DeviceDps;
-  uuid: string;
-  deviceType: number;
-  mac: string;
-  address: string;
+  uuid?: string;
+  deviceType?: number;
+  mac?: string;
+  address?: string;
 };
 
 export type DevListenerParams = {
