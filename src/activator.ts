@@ -39,6 +39,7 @@ export interface InitBluetoothActivatorFromScanBeanParams {
   mac: string;
   address: string;
   token: string;
+  timeout: number;
 }
 
 export function initActivator(
