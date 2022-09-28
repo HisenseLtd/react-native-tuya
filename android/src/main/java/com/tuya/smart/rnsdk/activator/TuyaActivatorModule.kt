@@ -32,7 +32,7 @@ import com.tuya.smart.sdk.enums.ActivatorModelEnum
 import android.util.Log
 
 
-abstract class TuyaActivatorModule(reactContext: ReactApplicationContext) :
+class TuyaActivatorModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   var mITuyaActivator: ITuyaActivator? = null
