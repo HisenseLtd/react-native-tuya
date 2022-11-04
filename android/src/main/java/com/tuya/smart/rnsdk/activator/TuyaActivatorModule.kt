@@ -240,7 +240,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
   fun initActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD, TIME, TYPE), params)) {
       TuyaHomeSdk.getActivatorInstance()
-        .getActivatorToken(params.getDouble(HOMEID)?.toLong(), object : ITuyaActivatorGetToken {
+        .getActivatorToken(params.getDouble(HOMEID).toLong(), object : ITuyaActivatorGetToken {
           override fun onSuccess(token: String) {
             mITuyaActivator = TuyaHomeSdk.getActivatorInstance().newActivator(
               ActivatorBuilder()
