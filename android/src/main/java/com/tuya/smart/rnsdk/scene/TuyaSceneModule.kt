@@ -52,7 +52,6 @@ import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.tuya.smart.sdk.api.IRequestCallback
 import com.tuya.smart.sdk.api.ITuyaDataCallback
 import com.tuya.smart.sdk.bean.DeviceBean
-import org.eclipse.paho.client.mqttv3.logging.LoggerFactory
 import java.util.*
 import java.util.stream.Stream
 import kotlin.collections.ArrayList
