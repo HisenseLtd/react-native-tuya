@@ -9,7 +9,7 @@
 #import "TuyaRNGroupModule.h"
 #import <TuyaSmartDeviceKit/TuyaSmartDeviceKit.h>
 #import "TuyaRNUtils.h"
-#import <YYModel.h>
+#import "YYModel.h"
 
 
 
@@ -18,11 +18,11 @@
 RCT_EXPORT_MODULE(TuyaGroupModule)
 
 RCT_EXPORT_METHOD(initWithOptions:(NSDictionary *)params) {
-  
+
 }
 
 RCT_EXPORT_METHOD(onDestory:(NSDictionary *)params) {
-  
+
 }
 
 
@@ -90,7 +90,7 @@ RCT_EXPORT_METHOD(publishDps:(NSDictionary *)params resolver:(RCTPromiseResolveB
     } failure:^(NSError *error) {
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
     }];
-  
+
 }
 
 

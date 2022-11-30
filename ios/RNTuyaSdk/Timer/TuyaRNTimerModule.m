@@ -10,7 +10,7 @@
 #import <TuyaSmartTimerKit/TuyaSmartTimer.h>
 #import <React/RCTBridgeModule.h>
 #import "TuyaRNUtils.h"
-#import <YYModel.h>
+#import "YYModel.h"
 
 @interface TuyaRNTimerModule()
 @property (nonatomic, strong) TuyaSmartTimer *timer;

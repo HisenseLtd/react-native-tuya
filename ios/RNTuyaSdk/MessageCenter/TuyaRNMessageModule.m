@@ -8,7 +8,7 @@
 
 #import "TuyaRNMessageModule.h"
 #import "TuyaRNUtils.h"
-#import <YYModel.h>
+#import "YYModel.h"
 #import <TuyaSmartMessageKit/TuyaSmartMessageKit.h>
 
 
@@ -22,11 +22,11 @@
 RCT_EXPORT_MODULE(TuyaMessageModule)
 
 RCT_EXPORT_METHOD(initWithOptions:(NSDictionary *)params) {
-  
+
 }
 
 RCT_EXPORT_METHOD(onDestory:(NSDictionary *)params) {
-  
+
 }
 
 
