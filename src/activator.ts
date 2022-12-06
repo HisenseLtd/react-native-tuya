@@ -101,8 +101,7 @@ export function initBluetoothDualModeActivatorFromScanBean(
 
 export function stopLeScan() {
   if (Platform.OS === 'ios') {
-    // TODO
-    return;
+    return tuyaBLEScanner.stopBluetoothScan();
   }
   return tuya.stopBluetoothScan();
 }

@@ -46,4 +46,8 @@ RCT_EXPORT_METHOD(startBluetoothScan:(RCTPromiseResolveBlock)resolver rejecter:(
   }
 }
 
+RCT_EXPORT_METHOD(stopBluetoothScan:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  [[TuyaSmartBLEManager sharedInstance] stopListening:YES];
+}
+
 @end
