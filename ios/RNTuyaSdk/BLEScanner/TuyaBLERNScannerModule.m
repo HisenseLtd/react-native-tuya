@@ -13,6 +13,7 @@
 #import <TuyaSmartBLEKit/TuyaSmartBLEManager+Biz.h>
 #import "TuyaRNUtils+Network.h"
 #import "YYModel.h"
+#import "TuyaEventSender.h"
 
 // Bluetooth Pairing
 static TuyaBLERNScannerModule * scannerInstance = nil;
@@ -41,9 +42,21 @@ RCT_EXPORT_METHOD(startBluetoothScan:(RCTPromiseResolveBlock)resolver rejecter:(
 }
 
 - (void)didDiscoveryDeviceWithDeviceInfo:(TYBLEAdvModel *)deviceInfo {
+  TuyaEventSender * eventSender = [TuyaEventSender allocWithZone: nil];
+  [eventSender sendEvent2RN:tuyaEventSenderScanLEEvent body:[deviceInfo yy_modelToJSONObject]];
+
   if (scannerInstance.promiseResolveBlock) {
     self.promiseResolveBlock([deviceInfo yy_modelToJSONObject]);
   }
+}
+
+RCT_EXPORT_METHOD(startBluetoothLEScan:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  if (scannerInstance == nil) {
+    scannerInstance = [TuyaBLERNScannerModule new];
+  }
+  [TuyaSmartBLEManager sharedInstance].delegate = scannerInstance;
+  [[TuyaSmartBLEManager sharedInstance] startListening:YES];
+  resolver(@"true");
 }
 
 RCT_EXPORT_METHOD(stopBluetoothScan:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
