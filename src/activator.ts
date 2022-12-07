@@ -30,17 +30,26 @@ export interface StartLeScanParams {
   scanType: 'SINGLE' | 'SINGLE_QR' | 'MESH' | 'SIG_MESH' | 'NORMAL' | 'TY_BEACON';
 }
 
-export interface InitBluetoothActivatorFromScanBeanParams {
+type IOSBLEActivatorParams = {
   homeId: number;
   ssid: string;
   password: string;
+  timeout: number;
+  deviceId: string;
+  productId: string;
+};
+type AndroidBLEActivatorParams = {
+  homeId: number;
+  ssid: string;
+  password: string;
+  timeout: number;
   uuid: string;
   deviceType: number;
   mac: string;
   address: string;
   token: string;
-  timeout: number;
-}
+};
+export type InitBluetoothActivatorFromScanBeanParams = IOSBLEActivatorParams | AndroidBLEActivatorParams;
 
 export function initActivator(
   params: InitActivatorParams
@@ -93,7 +102,6 @@ export function initBluetoothDualModeActivatorFromScanBean(
   params: InitBluetoothActivatorFromScanBeanParams
 ): Promise<DeviceBean> {
   if (Platform.OS === 'ios') {
-    // TODO
     return tuyaBLEActivator.initActivator(params);
   }
   return tuya.initBluetoothDualModeActivatorFromScanBean(params);
@@ -108,8 +116,7 @@ export function stopLeScan() {
 
 export function stopLePairing() {
   if (Platform.OS === 'ios') {
-    // TODO
-    return;
+    return tuyaBLEScanner.stopLePairing();
   }
   return tuya.stopLeActivation();
 }

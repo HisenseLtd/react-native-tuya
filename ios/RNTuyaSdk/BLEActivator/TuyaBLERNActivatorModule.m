@@ -20,6 +20,7 @@
 #define kTuyaRNActivatorModuleProductId @"productId"
 #define kTuyaRNActivatorModuleSSID @"ssid"
 #define kTuyaRNActivatorModulePassword @"password"
+#define kTuyaRNActivatorModuleTimeout @"timeout"
 
 // Bluetooth Pairing
 static TuyaBLERNActivatorModule * activatorInstance = nil;
@@ -49,9 +50,11 @@ RCT_EXPORT_METHOD(initActivator:(NSDictionary *)params resolver:(RCTPromiseResol
   NSString *productId = params[kTuyaRNActivatorModuleProductId];
   NSString *ssid = params[kTuyaRNActivatorModuleSSID];
   NSString *password = params[kTuyaRNActivatorModulePassword];
+  NSNumber *timeout = params[kTuyaRNActivatorModuleTimeout];
   long long int homeIdValue = [homeId longLongValue];
+  int timeoutValue = [timeout intValue] / 1000;
 
-  [[TuyaSmartBLEWifiActivator sharedInstance] startConfigBLEWifiDeviceWithUUID:deviceId homeId:homeIdValue productId:productId ssid:ssid password:password  timeout:180 success:^{
+  [[TuyaSmartBLEWifiActivator sharedInstance] startConfigBLEWifiDeviceWithUUID:deviceId homeId:homeIdValue productId:productId ssid:ssid password:password  timeout:timeoutValue success:^{
       // Wait for activation
     } failure:^ {
       if (activatorInstance.promiseRejectBlock) {
@@ -72,7 +75,11 @@ RCT_EXPORT_METHOD(initActivator:(NSDictionary *)params resolver:(RCTPromiseResol
       [TuyaRNUtils rejecterWithError:error handler:activatorInstance.promiseRejectBlock];
     }
   }
+  [[TuyaSmartBLEWifiActivator sharedInstance] stopDiscover];
+}
 
+RCT_EXPORT_METHOD(stopLePairing) {
+  [[TuyaSmartBLEWifiActivator sharedInstance] stopDiscover];
 }
 
 @end
