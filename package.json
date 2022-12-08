@@ -23,7 +23,7 @@
     "prepare": "tsdx build"
   },
   "peerDependencies": {
-    "react-native": ">=0.61.5"
+    "react-native": ">=0.70.5"
   },
   "husky": {
     "hooks": {
@@ -34,19 +34,19 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@volst/react-native-tuya",
+  "name": "@HisenseLtd/react-native-tuya",
   "description": "React Native bindings for the Tuya SDK",
-  "homepage": "https://github.com/Volst/react-native-tuya#readme",
+  "homepage": "https://github.com/HisenseLtd/react-native-tuya#readme",
   "author": "Kees Kluskens",
   "module": "dist/react-native-tuya.esm.js",
   "devDependencies": {
-    "@types/jest": "^25.1.2",
-    "@types/react-native": "^0.61.16",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.70.5",
     "@volst/eslint-config": "^4.1.1",
-    "husky": "^4.2.3",
-    "react-native": "^0.61.5",
-    "tsdx": "^0.12.3",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "husky": "^8.0.2",
+    "react-native": "^0.70.5",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.8.3"
   }
 }

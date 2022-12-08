@@ -1,4 +1,5 @@
-# @volst/react-native-tuya
+# @HisenseLtd/react-native-tuya
+Forked from @volst/react-native-tuya
 
 This is a fork of [TuyaInc/tuyasmart-home-sdk-react-native](https://github.com/TuyaInc/tuyasmart-home-sdk-react-native), fixing a lot of issues we came across and a better install guide. It also uses TypeScript. We use it currently in multiple projects for clients and it is stable.
 
