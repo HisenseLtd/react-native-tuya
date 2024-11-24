@@ -37,18 +37,16 @@
 RCT_EXPORT_MODULE(TuyaHomeModule)
 
 RCT_EXPORT_METHOD(getHomeDetail:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  long long homeId = ((NSNumber *)params[kTuyaRNHomeModuleHomeId]).longLongValue;
+  ThingSmartHome *smartHome = [ThingSmartHome homeWithHomeId:homeId];
 
-  self.currentHome = [self smartHomeWithParams:params];
-
-  [self.currentHome getHomeDataWithSuccess:^(ThingSmartHomeModel *homeModel) {
-    ThingSmartHome *newHome = [ThingSmartHome homeWithHomeId:homeModel.homeId];
+  [smartHome getHomeDataWithSuccess:^(ThingSmartHomeModel *homeModel) {
 
     NSMutableDictionary *homeDic = [[NSMutableDictionary alloc] init];
-    [homeDic setObject:getValidDataForDeviceModel(newHome.deviceList) forKey:@"deviceList"];
-    [homeDic setObject:getValidDataForGroupModel(newHome.groupList) forKey:@"groupList"];
-    [homeDic setObject:getValidDataForDeviceModel(newHome.sharedDeviceList) forKey:@"sharedDeviceList"];
-    [homeDic setObject:getValidDataForGroupModel(newHome.sharedGroupList) forKey:@"sharedGroupList"];
-
+    [homeDic setObject:getValidDataForDeviceModel(smartHome.deviceList) forKey:@"deviceList"];
+    [homeDic setObject:getValidDataForGroupModel(smartHome.groupList) forKey:@"groupList"];
+    [homeDic setObject:getValidDataForDeviceModel(smartHome.sharedDeviceList) forKey:@"sharedDeviceList"];
+    [homeDic setObject:getValidDataForGroupModel(smartHome.sharedGroupList) forKey:@"sharedGroupList"];
     if(resolver) {
       resolver(homeDic);
     }
