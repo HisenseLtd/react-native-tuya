@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['ReactNativeTuya_' + name]).toInteger()
+}
 
 buildscript {
     ext.kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : '1.6.0'
@@ -20,11 +23,10 @@ buildscript {
 
 
 android {
-    compileSdkVersion 33
-
+    compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdkVersion getExtOrIntegerDefault('minSdkVersion')
+        targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
         versionCode 1
         versionName "1.0"
 
@@ -47,7 +49,6 @@ configurations.all {
 
 dependencies {
     implementation 'com.alibaba:fastjson:1.2.83'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.facebook.react:react-native:+'
 
     // The latest stable App SDK for Android.
