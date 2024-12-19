@@ -350,7 +350,7 @@ function removeMember(params) {
   return tuya$6.removeMember(params);
 }
 
-var tuya$7 = reactNative.NativeModules.TuyaDeviceModule;
+var tuya$7 = reactNative.Platform.OS === 'ios' ? reactNative.NativeModules.TuyaDeviceModule : reactNative.NativeModules.TuyaOTAModule;
 function startOta(params, onSuccess, onFailure, onProgress) {
   tuya$7.startOta(params);
   return addEvent(bridge(HARDWAREUPGRADELISTENER, params.devId), function (data) {

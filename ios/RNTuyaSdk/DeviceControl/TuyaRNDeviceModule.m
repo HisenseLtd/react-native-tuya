@@ -172,7 +172,7 @@ RCT_EXPORT_METHOD(startOta:(NSDictionary *)params resolver:(RCTPromiseResolveBlo
 RCT_EXPORT_METHOD(getOtaInfo:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
 
     ThingSmartDevice *device = [ThingSmartDevice deviceWithDeviceId:params[@"devId"]];
-    [device getFirmwareUpgradeInfo:^(NSArray<ThingSmartFirmwareUpgradeModel *> *upgradeModelList) {
+    [device checkFirmwareUpgrade:^(NSArray<ThingSmartFirmwareUpgradeModel *> *upgradeModelList) {
 
         NSMutableArray *res = [NSMutableArray array];
         for (ThingSmartFirmwareUpgradeModel *item in upgradeModelList) {
@@ -183,7 +183,7 @@ RCT_EXPORT_METHOD(getOtaInfo:(NSDictionary *)params resolver:(RCTPromiseResolveB
           resolver(res);
         }
 
-        NSLog(@"getFirmwareUpgradeInfo success");
+        NSLog(@"checkFirmwareUpgrade success");
     } failure:^(NSError *error) {
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
     }];

@@ -1,7 +1,7 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { addEvent, bridge, HARDWAREUPGRADELISTENER } from './bridgeUtils';
 
-const tuya = NativeModules.TuyaDeviceModule;
+const tuya = Platform.OS === 'ios' ? NativeModules.TuyaDeviceModule : NativeModules.TuyaOTAModule;
 
 export type StartOtaParams = {
   devId: string;
