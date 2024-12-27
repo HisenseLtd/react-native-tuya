@@ -6,7 +6,8 @@ export declare enum DeviceListenerType {
     onDevInfoUpdate = "onDevInfoUpdate",
     onFirmwareUpgradeSuccess = "onFirmwareUpgradeSuccess",
     onFirmwareUpgradeFailure = "onFirmwareUpgradeFailure",
-    onFirmwareUpgradeProgress = "onFirmwareUpgradeProgress"
+    onFirmwareUpgradeProgress = "onFirmwareUpgradeProgress",
+    onFirmwareUpgradeStatus = "onFirmwareUpgradeStatus"
 }
 declare type TDeviceListenerOptions = {
     devId: string;

@@ -16,19 +16,18 @@ class TuyaOTAModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
        return "TuyaOTAModule"
     }
 
-    var iTuyaOta:IThingOta?=null
-    /* 获取固件升级信息 */
     @ReactMethod
-    fun getOtaInfo(params: ReadableMap,promise: Promise) {
+    fun getOtaInfo(params: ReadableMap, promise: Promise) {
         if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
-            getIoat(params.getString(DEVID) as String).getOtaInfo(object :IGetOtaInfoCallback{
+            val devId = params.getString(DEVID) as String;
+            ThingHomeSdk.newOTAServiceInstance(devId).getFirmwareUpgradeInfo(object : IGetOtaInfoCallback {
                 override fun onSuccess(list: List<UpgradeInfoBean>) {
                     promise.resolve(TuyaReactUtils.parseToWritableArray(
                             JsonUtils.toJsonArray(list)))
                 }
 
-               override fun onFailure(code: String, error: String){
-                    promise.reject(code,error)
+                override fun onFailure(code: String, error: String) {
+                    promise.reject(code, error)
                 }
             })
         }
@@ -37,7 +36,8 @@ class TuyaOTAModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     @ReactMethod
     fun startOta(params: ReadableMap) {
         if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
-            iTuyaOta = getIoat(params.getString(DEVID) as String)
+            val devId = params.getString(DEVID) as String;
+            val iTuyaOta = ThingHomeSdk.newOTAInstance(devId)
             iTuyaOta?.setOtaListener(object : IOtaListener {
                 override fun onSuccess(otaType: Int) {
                     var map=Arguments.createMap();
@@ -78,11 +78,27 @@ class TuyaOTAModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
             iTuyaOta?.startOta()
         }
     }
+
     @ReactMethod
-    fun onDestroy(){
-        iTuyaOta?.onDestroy()
-    }
-    fun getIoat(devId:String): IThingOta {
-        return ThingHomeSdk.newOTAInstance(devId)
+    fun startFirmwareUpgrade(params: ReadableMap, promise: Promise) {
+        if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
+            val devId = params.getString(DEVID) as String;
+
+            ThingHomeSdk.newOTAServiceInstance(devId).getFirmwareUpgradeInfo(object : IGetOtaInfoCallback {
+                override fun onSuccess(list: List<UpgradeInfoBean>) {
+                    if (list.isNotEmpty()) {
+                        val iThingOTAService = ThingHomeSdk.newOTAServiceInstance(devId);
+                        iThingOTAService.startFirmwareUpgrade(list);
+                        promise.resolve(null)
+                    } else {
+                        promise.reject("1003","No updates available.")
+                    }
+                }
+
+                override fun onFailure(code: String, error: String){
+                    promise.reject(code,error)
+                }
+            })
+        }
     }
 }

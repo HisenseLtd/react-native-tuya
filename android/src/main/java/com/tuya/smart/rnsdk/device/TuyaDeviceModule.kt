@@ -6,6 +6,7 @@ import com.facebook.react.bridge.*
 import com.thingclips.smart.android.device.api.IGetDataPointStatCallback
 import com.thingclips.smart.android.device.bean.DataPointStatBean
 import com.thingclips.smart.android.device.enums.DataPointTypeEnum
+import com.thingclips.smart.device.bean.ThingDevUpgradeStatusBean
 import com.thingclips.smart.home.sdk.ThingHomeSdk
 import com.tuya.smart.rnsdk.utils.BridgeUtils
 import com.tuya.smart.rnsdk.utils.Constant.COMMAND
@@ -19,6 +20,7 @@ import com.tuya.smart.rnsdk.utils.Constant.getIResultCallback
 import com.tuya.smart.rnsdk.utils.ReactParamsCheck
 import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.thingclips.smart.sdk.api.IDevListener
+import com.thingclips.smart.sdk.api.IDevOTAListener
 import com.thingclips.smart.sdk.api.IThingDevice
 
 
@@ -93,7 +95,23 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                     BridgeUtils.devListener(reactApplicationContext, map, params.getString(DEVID) as String)
                 }
             })
+            ThingHomeSdk.newOTAServiceInstance(params.getString(DEVID) as String).registerDevOTAListener(object : IDevOTAListener {
+                override fun firmwareUpgradeStatus(upgradeStatusBean: ThingDevUpgradeStatusBean) {
+                    val map = Arguments.createMap()
+                    map.putString("devId", params.getString(DEVID) as String)
+                    map.putString("type", "onFirmwareUpgradeStatus")
 
+                    val payload = Arguments.createMap();
+                    payload.putInt("progress", upgradeStatusBean.progress)
+                    payload.putString("status", upgradeStatusBean.statusText)
+                    payload.putInt("upgradeStatus", upgradeStatusBean.status.ordinal)
+                    payload.putString("error", upgradeStatusBean.errorMsg)
+
+                    map.putMap("payload", payload);
+
+                    BridgeUtils.devListener(reactApplicationContext, map, params.getString(DEVID) as String)
+                }
+            })
         }
     }
 
