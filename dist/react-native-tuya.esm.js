@@ -348,7 +348,7 @@ function removeMember(params) {
   return tuya$6.removeMember(params);
 }
 
-var tuya$7 = NativeModules.TuyaDeviceModule;
+var tuya$7 = Platform.OS === 'ios' ? NativeModules.TuyaDeviceModule : NativeModules.TuyaOTAModule;
 function startOta(params, onSuccess, onFailure, onProgress) {
   tuya$7.startOta(params);
   return addEvent(bridge(HARDWAREUPGRADELISTENER, params.devId), function (data) {
@@ -361,8 +361,18 @@ function startOta(params, onSuccess, onFailure, onProgress) {
     }
   });
 }
+var TuyaUpgradeStatus;
+(function (TuyaUpgradeStatus) {
+  TuyaUpgradeStatus[TuyaUpgradeStatus["noUpdate"] = 0] = "noUpdate";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["updateAvailable"] = 1] = "updateAvailable";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["updating"] = 2] = "updating";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["waitForDevice"] = 5] = "waitForDevice";
+})(TuyaUpgradeStatus || (TuyaUpgradeStatus = {}));
 function getOtaInfo(params) {
   return tuya$7.getOtaInfo(params);
+}
+function startFirmwareUpgrade(params) {
+  return tuya$7.startFirmwareUpgrade(params);
 }
 
 var tuya$8 = NativeModules.TuyaTimerModule;
@@ -445,5 +455,5 @@ function loginOrRegisterWithUid(params) {
   });
 }
 
-export { DEVLISTENER, DeviceListenerType, GROUPLISTENER, HARDWAREUPGRADELISTENER, HOMECHANGE, HOMESTATUS, SINGLETRANSFER, SUBDEVLISTENER, TuyaActivationType, addDeviceListener, addEvent, addMember, addTimerWithTask, bridge, cancelAccount, createHome, dismissHome, getActivatorToken, getAllTimerWithDeviceId, getCurrentUser, getCurrentWifi, getDataPointStat, getEmailValidateCode, getHomeDetail, getOtaInfo, getRegisterEmailValidateCode, getRoomDeviceList, getTimerTaskStatusWithDeviceId, getUser, initActivator, initBluetoothDualModeActivator, initBluetoothDualModeActivatorFromScanBean, joinFamily, loginOrRegisterWithUid, loginWithEmail, loginWithUid, logout, openNetworkSettings, prepareDeviceBean, queryHomeList, queryMemberList, queryRoomList, registerAccountWithEmail, registerDevListener, removeAllDeviceListeners, removeDevice, removeMember, removeTimerWithTask, renameDevice, resetEmailPassword, send, sendVerifyCodeWithUserName, sortRoom, startBluetoothScan, startOta, startQRActivator, stopConfig, stopLePairing, stopLeScan, stopQRActivator, unRegisterAllDevListeners, updateHome, updateTimerStatusWithTask, updateTimerWithTask };
+export { DEVLISTENER, DeviceListenerType, GROUPLISTENER, HARDWAREUPGRADELISTENER, HOMECHANGE, HOMESTATUS, SINGLETRANSFER, SUBDEVLISTENER, TuyaActivationType, TuyaUpgradeStatus, addDeviceListener, addEvent, addMember, addTimerWithTask, bridge, cancelAccount, createHome, dismissHome, getActivatorToken, getAllTimerWithDeviceId, getCurrentUser, getCurrentWifi, getDataPointStat, getEmailValidateCode, getHomeDetail, getOtaInfo, getRegisterEmailValidateCode, getRoomDeviceList, getTimerTaskStatusWithDeviceId, getUser, initActivator, initBluetoothDualModeActivator, initBluetoothDualModeActivatorFromScanBean, joinFamily, loginOrRegisterWithUid, loginWithEmail, loginWithUid, logout, openNetworkSettings, prepareDeviceBean, queryHomeList, queryMemberList, queryRoomList, registerAccountWithEmail, registerDevListener, removeAllDeviceListeners, removeDevice, removeMember, removeTimerWithTask, renameDevice, resetEmailPassword, send, sendVerifyCodeWithUserName, sortRoom, startBluetoothScan, startFirmwareUpgrade, startOta, startQRActivator, stopConfig, stopLePairing, stopLeScan, stopQRActivator, unRegisterAllDevListeners, updateHome, updateTimerStatusWithTask, updateTimerWithTask };
 //# sourceMappingURL=react-native-tuya.esm.js.map

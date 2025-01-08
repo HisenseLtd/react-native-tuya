@@ -12,6 +12,7 @@ export enum DeviceListenerType {
   onFirmwareUpgradeSuccess = 'onFirmwareUpgradeSuccess',
   onFirmwareUpgradeFailure = 'onFirmwareUpgradeFailure',
   onFirmwareUpgradeProgress = 'onFirmwareUpgradeProgress',
+  onFirmwareUpgradeStatus = 'onFirmwareUpgradeStatus',
 }
 
 const subscriptions: Record<string, number> = {};

@@ -350,7 +350,7 @@ function removeMember(params) {
   return tuya$6.removeMember(params);
 }
 
-var tuya$7 = reactNative.NativeModules.TuyaDeviceModule;
+var tuya$7 = reactNative.Platform.OS === 'ios' ? reactNative.NativeModules.TuyaDeviceModule : reactNative.NativeModules.TuyaOTAModule;
 function startOta(params, onSuccess, onFailure, onProgress) {
   tuya$7.startOta(params);
   return addEvent(bridge(HARDWAREUPGRADELISTENER, params.devId), function (data) {
@@ -363,8 +363,17 @@ function startOta(params, onSuccess, onFailure, onProgress) {
     }
   });
 }
+(function (TuyaUpgradeStatus) {
+  TuyaUpgradeStatus[TuyaUpgradeStatus["noUpdate"] = 0] = "noUpdate";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["updateAvailable"] = 1] = "updateAvailable";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["updating"] = 2] = "updating";
+  TuyaUpgradeStatus[TuyaUpgradeStatus["waitForDevice"] = 5] = "waitForDevice";
+})(exports.TuyaUpgradeStatus || (exports.TuyaUpgradeStatus = {}));
 function getOtaInfo(params) {
   return tuya$7.getOtaInfo(params);
+}
+function startFirmwareUpgrade(params) {
+  return tuya$7.startFirmwareUpgrade(params);
 }
 
 var tuya$8 = reactNative.NativeModules.TuyaTimerModule;
@@ -499,6 +508,7 @@ exports.send = send;
 exports.sendVerifyCodeWithUserName = sendVerifyCodeWithUserName;
 exports.sortRoom = sortRoom;
 exports.startBluetoothScan = startBluetoothScan;
+exports.startFirmwareUpgrade = startFirmwareUpgrade;
 exports.startOta = startOta;
 exports.startQRActivator = startQRActivator;
 exports.stopConfig = stopConfig;
