@@ -25,7 +25,7 @@ export type DeviceBean = {
     schemaInfo: {
       dpCodeSchemaMap: Record<string, DeviceSchemaItem>;
     };
-  }
+  };
 };
 
 export type DevListenerParams = {
@@ -51,7 +51,7 @@ export function registerDevListener(
   callback: (data: any) => void
 ) {
   tuya.registerDevListener(params);
-  const sub = addEvent(bridge(DEVLISTENER, params.devId), data => {
+  const sub = addEvent(bridge(DEVLISTENER, params.devId), (data) => {
     if (data.type === type) {
       callback(data);
     }
@@ -104,4 +104,12 @@ export function getDataPointStat(
   params: GetDataPointStatsParams
 ): Promise<any> {
   return tuya.getDataPointStat(params);
+}
+
+export type GetWifiSignalStrengthParams = { devId: string };
+
+export function getWifiSignalStrength(
+  params: GetWifiSignalStrengthParams
+): Promise<number> {
+  return tuya.getWifiSignalStrength(params);
 }

@@ -192,7 +192,7 @@ RCT_EXPORT_METHOD(getOtaInfo:(NSDictionary *)params resolver:(RCTPromiseResolveB
 
 RCT_EXPORT_METHOD(startFirmwareUpgrade:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
     NSString *deviceId = params[kTuyaDeviceModuleDevId];
-    
+
     if (![deviceId isKindOfClass:[NSString class]] || deviceId.length == 0) {
         NSError *error = [NSError errorWithDomain:@"com.hisense.rntuya"
                                              code:1001
@@ -200,7 +200,7 @@ RCT_EXPORT_METHOD(startFirmwareUpgrade:(NSDictionary *)params resolver:(RCTPromi
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
         return;
     }
-    
+
     ThingSmartDevice *device = [ThingSmartDevice deviceWithDeviceId:params[@"devId"]];
     if (!device) {
         NSError *error = [NSError errorWithDomain:@"com.hisense.rntuya"
@@ -208,7 +208,7 @@ RCT_EXPORT_METHOD(startFirmwareUpgrade:(NSDictionary *)params resolver:(RCTPromi
                                          userInfo:@{NSLocalizedDescriptionKey: @"The device not found."}];
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
     }
-    
+
     [device checkFirmwareUpgrade:^(NSArray<ThingSmartFirmwareUpgradeModel *> *upgradeModelList) {
         if (upgradeModelList.count == 0) {
             NSError *error = [NSError errorWithDomain:@"com.hisense.rntuya"
@@ -217,13 +217,22 @@ RCT_EXPORT_METHOD(startFirmwareUpgrade:(NSDictionary *)params resolver:(RCTPromi
             [TuyaRNUtils rejecterWithError:error handler:rejecter];
             return;
         }
-        
+
         [device startFirmwareUpgrade:upgradeModelList];
 
         NSLog(@"startFirmwareUpgrade: started...");
         resolver(@"success");
     } failure:^(NSError *error) {
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
+    }];
+}
+
+RCT_EXPORT_METHOD(getWifiSignalStrength:(NSString *)devId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [[TuyaSmartDevice deviceWithDeviceId:devId] getWifiSignalStrengthWithSuccess:^(NSString *signalStrength) {
+        resolve(signalStrength);
+    } failure:^(NSError *error) {
+        reject([NSString stringWithFormat:@"%ld", (long)error.code], error.localizedDescription, error);
     }];
 }
 

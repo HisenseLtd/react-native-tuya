@@ -53,3 +53,7 @@ export declare type GetDataPointStatsParams = {
     startTime: number;
 };
 export declare function getDataPointStat(params: GetDataPointStatsParams): Promise<any>;
+export declare type GetWifiSignalStrengthParams = {
+    devId: string;
+};
+export declare function getWifiSignalStrength(params: GetWifiSignalStrengthParams): Promise<number>;
