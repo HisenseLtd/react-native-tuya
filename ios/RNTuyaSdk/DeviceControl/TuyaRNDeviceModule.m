@@ -227,12 +227,20 @@ RCT_EXPORT_METHOD(startFirmwareUpgrade:(NSDictionary *)params resolver:(RCTPromi
     }];
 }
 
-RCT_EXPORT_METHOD(getWifiSignalStrength:(NSString *)devId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(getWifiSignalStrength:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [[TuyaSmartDevice deviceWithDeviceId:devId] getWifiSignalStrengthWithSuccess:^(NSString *signalStrength) {
-        resolve(signalStrength);
+    ThingSmartDevice *device = [self smartDeviceWithParams:params];
+    if (device == nil) {
+        NSError *error = [NSError errorWithDomain:@"com.hisense.rntuya"
+                                             code:1002
+                                         userInfo:@{NSLocalizedDescriptionKey: @"The device not found."}];
+        [TuyaRNUtils rejecterWithError:error handler:reject];
+        return;
+    }
+    [device getWifiSignalStrengthWithSuccess:^{
+        resolve(@"success");
     } failure:^(NSError *error) {
-        reject([NSString stringWithFormat:@"%ld", (long)error.code], error.localizedDescription, error);
+        [TuyaRNUtils rejecterWithError:error handler:reject];
     }];
 }
 
