@@ -22,6 +22,7 @@ import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.thingclips.smart.sdk.api.IDevListener
 import com.thingclips.smart.sdk.api.IDevOTAListener
 import com.thingclips.smart.sdk.api.IThingDevice
+import com.thingclips.smart.sdk.api.WifiSignalListener
 
 
 class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -194,6 +195,21 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
     fun getDevice(devId: String): IThingDevice {
         return ThingHomeSdk.newDeviceInstance(devId);
+    }
+
+    @ReactMethod
+    fun getWifiSignalStrength(params: ReadableMap, promise: Promise)  {
+        if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
+            getDevice(params.getString(DEVID) as String)?.requestWifiSignal(object : WifiSignalListener {
+                override fun onSignalValueFind(signal: String) {
+                    promise.resolve(signal)
+                }
+
+                override fun onError(errorCode: String?, errorMsg: String?) {
+                    promise.reject(errorCode, errorMsg)
+                }
+            })
+        }
     }
 
 }

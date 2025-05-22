@@ -54,7 +54,7 @@ dependencies {
     // The latest stable App SDK for Android.
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.11.0'
     implementation 'com.facebook.soloader:soloader:0.10.5'
-    implementation 'com.thingclips.smart:thingsmart:5.11.3'
+    implementation 'com.thingclips.smart:thingsmart:6.4.0'
 }
 repositories {
     maven {
@@ -62,14 +62,14 @@ repositories {
         url "$projectDir/../node_modules/react-native/android"
     }
 
-    jcenter()
-    maven { url 'https://maven-other.tuya.com/repository/maven-releases/' }
-    maven { url "https://maven-other.tuya.com/repository/maven-commercial-releases/" }
-    maven { url 'https://jitpack.io' }
     google()
     mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
     maven { url 'https://maven.aliyun.com/repository/public' }
-    maven { url 'https://central.maven.org/maven2/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://developer.huawei.com/repo/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+
+    maven { url 'https://maven-other.tuya.com/repository/maven-releases/' }
+    maven { url "https://maven-other.tuya.com/repository/maven-commercial-releases/" }
 }

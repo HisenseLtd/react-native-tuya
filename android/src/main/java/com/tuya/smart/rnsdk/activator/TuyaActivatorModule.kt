@@ -55,15 +55,19 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun startBluetoothScan(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(TIMEOUT, SCAN_TYPE), params)) {
-      ThingHomeSdk.getBleOperator().startLeScan(
-        params.getInt(TIMEOUT), params.getString(SCAN_TYPE)?.let { ScanType.valueOf(it) }
-      ) { bean ->
-        this.reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java).emit(
-          ON_SCAN_BEAN_EVENT, TuyaReactUtils.parseToWritableMap(bean)
-        )
-      };
-      promise.resolve(true)
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(TIMEOUT, SCAN_TYPE), params)) {
+        ThingHomeSdk.getBleOperator().startLeScan(
+          params.getInt(TIMEOUT), params.getString(SCAN_TYPE)?.let { ScanType.valueOf(it) }
+        ) { bean ->
+          this.reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java).emit(
+            ON_SCAN_BEAN_EVENT, TuyaReactUtils.parseToWritableMap(bean)
+          )
+        };
+        promise.resolve(true)
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
@@ -75,96 +79,103 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun initBluetoothDualModeActivator(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD), params)) {
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD), params)) {
 
-      ThingHomeSdk.getBleOperator().startLeScan(
-        60000, ScanType.SINGLE
-      ) { bean ->
-        params.getDouble(HOMEID).toLong().let {
-          ThingHomeSdk.getActivatorInstance()
-            .getActivatorToken(it, object : IThingActivatorGetToken {
-              override fun onSuccess(token: String) {
-                val multiModeActivatorBean = MultiModeActivatorBean();
-                multiModeActivatorBean.ssid = params.getString(SSID);
-                multiModeActivatorBean.pwd = params.getString(PASSWORD);
+        ThingHomeSdk.getBleOperator().startLeScan(
+          60000, ScanType.SINGLE
+        ) { bean ->
+          params.getDouble(HOMEID).toLong().let {
+            ThingHomeSdk.getActivatorInstance()
+              .getActivatorToken(it, object : IThingActivatorGetToken {
+                override fun onSuccess(token: String) {
+                  val multiModeActivatorBean = MultiModeActivatorBean();
+                  multiModeActivatorBean.ssid = params.getString(SSID);
+                  multiModeActivatorBean.pwd = params.getString(PASSWORD);
 
-                multiModeActivatorBean.uuid = bean.getUuid();
-                multiModeActivatorBean.deviceType = bean.getDeviceType();
-                multiModeActivatorBean.mac = bean.getMac();
-                multiModeActivatorBean.address = bean.getAddress();
+                  multiModeActivatorBean.uuid = bean.getUuid();
+                  multiModeActivatorBean.deviceType = bean.getDeviceType();
+                  multiModeActivatorBean.mac = bean.getMac();
+                  multiModeActivatorBean.address = bean.getAddress();
 
 
-                multiModeActivatorBean.homeId = params.getDouble(HOMEID).toLong();
-                multiModeActivatorBean.token = token;
-                multiModeActivatorBean.timeout = 180000;
-                multiModeActivatorBean.phase1Timeout = 60000;
+                  multiModeActivatorBean.homeId = params.getDouble(HOMEID).toLong();
+                  multiModeActivatorBean.token = token;
+                  multiModeActivatorBean.timeout = 180000;
+                  multiModeActivatorBean.phase1Timeout = 60000;
 
-                ThingHomeSdk.getActivator().newMultiModeActivator()
-                  .startActivator(multiModeActivatorBean, object : IMultiModeActivatorListener {
-                    override fun onSuccess(bean: DeviceBean) {
-                      promise.resolve(TuyaReactUtils.parseToWritableMap(bean));
-                    }
+                  ThingHomeSdk.getActivator().newMultiModeActivator()
+                    .startActivator(multiModeActivatorBean, object : IMultiModeActivatorListener {
+                      override fun onSuccess(bean: DeviceBean) {
+                        promise.resolve(TuyaReactUtils.parseToWritableMap(bean));
+                      }
 
-                    override fun onFailure(code: Int, msg: String?, handle: Any?) {
-                      promise.reject(code.toString(), msg);
-                    }
-                  });
-              }
+                      override fun onFailure(code: Int, msg: String?, handle: Any?) {
+                        promise.reject(code.toString(), msg);
+                      }
+                    });
+                }
 
-              override fun onFailure(s: String, s1: String) {
-                promise.reject(s, s1);
-              }
-            })
-        }
-      };
+                override fun onFailure(s: String, s1: String) {
+                  promise.reject(s, s1);
+                }
+              })
+          }
+        };
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
   @ReactMethod
   fun initBluetoothDualModeActivatorFromScanBean(params: ReadableMap, promise: Promise) {
+    try {
+      if (ReactParamsCheck.checkParams(
+          arrayOf(
+            HOMEID,
+            SSID,
+            PASSWORD,
+            TOKEN,
+            UUID,
+            ADDRESS,
+            MAC,
+            DEVICE_TYPE,
+            TIMEOUT
+          ), params
+        )
+      ) {
 
-    if (ReactParamsCheck.checkParams(
-        arrayOf(
-          HOMEID,
-          SSID,
-          PASSWORD,
-          TOKEN,
-          UUID,
-          ADDRESS,
-          MAC,
-          DEVICE_TYPE,
-          TIMEOUT
-        ), params
-      )
-    ) {
+        val multiModeActivatorBean = MultiModeActivatorBean();
+        multiModeActivatorBean.ssid = params.getString(SSID);
+        multiModeActivatorBean.pwd = params.getString(PASSWORD);
 
-      val multiModeActivatorBean = MultiModeActivatorBean();
-      multiModeActivatorBean.ssid = params.getString(SSID);
-      multiModeActivatorBean.pwd = params.getString(PASSWORD);
-
-      multiModeActivatorBean.uuid = params.getString(UUID)
-      multiModeActivatorBean.deviceType = params.getInt(DEVICE_TYPE)
-      multiModeActivatorBean.mac = params.getString(MAC)
-      multiModeActivatorBean.address = params.getString(ADDRESS)
+        multiModeActivatorBean.uuid = params.getString(UUID)
+        multiModeActivatorBean.deviceType = params.getInt(DEVICE_TYPE)
+        multiModeActivatorBean.mac = params.getString(MAC)
+        multiModeActivatorBean.address = params.getString(ADDRESS)
 
 
-      multiModeActivatorBean.homeId = params.getDouble(HOMEID).toLong();
-      multiModeActivatorBean.token = params.getString(TOKEN);
-      multiModeActivatorBean.timeout = params.getInt(TIMEOUT).toLong();
-      multiModeActivatorBean.phase1Timeout = 60000;
+        multiModeActivatorBean.homeId = params.getDouble(HOMEID).toLong();
+        multiModeActivatorBean.token = params.getString(TOKEN);
+        multiModeActivatorBean.timeout = params.getInt(TIMEOUT).toLong();
+        multiModeActivatorBean.phase1Timeout = 60000;
 
-      leActivatorUUID = params.getString(UUID);
-      ThingHomeSdk.getActivator().newMultiModeActivator()
-        .startActivator(multiModeActivatorBean, object : IMultiModeActivatorListener {
-          override fun onSuccess(bean: DeviceBean) {
-            promise.resolve(TuyaReactUtils.parseToWritableMap(bean));
-          }
+        leActivatorUUID = params.getString(UUID);
+        ThingHomeSdk.getActivator().newMultiModeActivator()
+          .startActivator(multiModeActivatorBean, object : IMultiModeActivatorListener {
+            override fun onSuccess(bean: DeviceBean) {
+              promise.resolve(TuyaReactUtils.parseToWritableMap(bean));
+            }
 
-          override fun onFailure(code: Int, msg: String?, handle: Any?) {
-            Log.e("TuyaActivatorModule", code.toString() + msg.toString());
-            promise.reject(code.toString(), msg);
-          }
-        });
+            override fun onFailure(code: Int, msg: String?, handle: Any?) {
+              Log.e("TuyaActivatorModule", code.toString() + msg.toString());
+              promise.reject(code.toString(), msg);
+            }
+          });
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
@@ -198,41 +209,49 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun getActivatorToken(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(HOMEID), params)) {
-      ThingHomeSdk.getActivatorInstance()
-        .getActivatorToken(params.getDouble(HOMEID).toLong(), object : IThingActivatorGetToken {
-          override fun onSuccess(token: String?) {
-            promise.resolve(token);
-          }
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(HOMEID), params)) {
+        ThingHomeSdk.getActivatorInstance()
+          .getActivatorToken(params.getDouble(HOMEID).toLong(), object : IThingActivatorGetToken {
+            override fun onSuccess(token: String?) {
+              promise.resolve(token);
+            }
 
-          override fun onFailure(errorCode: String?, errorMsg: String?) {
-            promise.reject(errorCode, errorMsg);
-          }
-        })
+            override fun onFailure(errorCode: String?, errorMsg: String?) {
+              promise.reject(errorCode, errorMsg);
+            }
+          })
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
   @ReactMethod
   fun startQRActivator(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(TOKEN, TIME), params)) {
-      val cBuilder = ThingCameraActivatorBuilder()
-        .setToken(params.getString(TOKEN))
-        .setTimeOut(params.getInt(TIME).toLong())
-        .setContext(reactApplicationContext.applicationContext)
-        .setListener(object : IThingSmartCameraActivatorListener {
-          override fun onActiveSuccess(devResp: DeviceBean?) {
-            promise.resolve(TuyaReactUtils.parseToWritableMap(devResp));
-          }
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(TOKEN, TIME), params)) {
+        val cBuilder = ThingCameraActivatorBuilder()
+          .setToken(params.getString(TOKEN))
+          .setTimeOut(params.getInt(TIME).toLong())
+          .setContext(reactApplicationContext.applicationContext)
+          .setListener(object : IThingSmartCameraActivatorListener {
+            override fun onActiveSuccess(devResp: DeviceBean?) {
+              promise.resolve(TuyaReactUtils.parseToWritableMap(devResp));
+            }
 
-          override fun onQRCodeSuccess(qrcodeUrl: String?) {}
+            override fun onQRCodeSuccess(qrcodeUrl: String?) {}
 
-          override fun onError(errorCode: String?, errorMsg: String?) {
-            promise.reject(errorCode, errorMsg);
-          }
-        });
+            override fun onError(errorCode: String?, errorMsg: String?) {
+              promise.reject(errorCode, errorMsg);
+            }
+          });
 
-      mTuyaCameraActivator = ThingHomeSdk.getActivatorInstance().newCameraDevActivator(cBuilder);
-      mTuyaCameraActivator?.start();
+        mTuyaCameraActivator = ThingHomeSdk.getActivatorInstance().newCameraDevActivator(cBuilder);
+        mTuyaCameraActivator?.start();
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
@@ -243,8 +262,9 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun initActivator(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD, TIME, TYPE), params)) {
-      var mode = when (params.getString(TYPE)) {
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD, TIME, TYPE), params)) {
+        var mode = when (params.getString(TYPE)) {
           "TY_EZ" -> ActivatorModelEnum.THING_EZ
           "TY_AP" -> ActivatorModelEnum.THING_AP
           "TY_QR" -> ActivatorModelEnum.THING_QR
@@ -252,29 +272,31 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
             promise.reject(this.name, "wrong activation type")
             return;
           }
+        }
+        ThingHomeSdk.getActivatorInstance()
+          .getActivatorToken(params.getDouble(HOMEID).toLong(), object : IThingActivatorGetToken {
+            override fun onSuccess(token: String) {
+              mIThingActivator = ThingHomeSdk.getActivatorInstance().newActivator(
+                ActivatorBuilder()
+                  .setSsid(params.getString(SSID))
+                  .setContext(reactApplicationContext.applicationContext)
+                  .setPassword(params.getString(PASSWORD))
+                  .setActivatorModel(mode)
+                  .setTimeOut(params.getInt(TIME).toLong())
+                  .setToken(token).setListener(getIThingSmartActivatorListener(promise))
+              )
+              mIThingActivator?.start()
+            }
+
+
+            override fun onFailure(s: String, s1: String) {
+              promise.reject(s, s1)
+            }
+          })
       }
-      ThingHomeSdk.getActivatorInstance()
-        .getActivatorToken(params.getDouble(HOMEID).toLong(), object : IThingActivatorGetToken {
-          override fun onSuccess(token: String) {
-            mIThingActivator = ThingHomeSdk.getActivatorInstance().newActivator(
-              ActivatorBuilder()
-                .setSsid(params.getString(SSID))
-                .setContext(reactApplicationContext.applicationContext)
-                .setPassword(params.getString(PASSWORD))
-                .setActivatorModel(mode)
-                .setTimeOut(params.getInt(TIME).toLong())
-                .setToken(token).setListener(getIThingSmartActivatorListener(promise))
-            )
-            mIThingActivator?.start()
-          }
-
-
-          override fun onFailure(s: String, s1: String) {
-            promise.reject(s, s1)
-          }
-        })
+    } catch (e: Exception) {
+      promise.reject(e)
     }
-
   }
 
   /**
@@ -282,34 +304,38 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
    */
   @ReactMethod
   fun newGwSubDevActivator(params: ReadableMap, promise: Promise) {
-    if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)) {
-      val builder = ThingGwSubDevActivatorBuilder()
-        //设置网关ID
-        .setDevId(params.getString(DEVID))
-        //设置配网超时时间
-        .setTimeOut(params.getInt(TIME).toLong())
-        .setListener(object : IThingSmartActivatorListener {
-          override fun onError(var1: String, var2: String) {
-            promise.reject(var1, var2)
-          }
+    try {
+      if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)) {
+        val builder = ThingGwSubDevActivatorBuilder()
+          //设置网关ID
+          .setDevId(params.getString(DEVID))
+          //设置配网超时时间
+          .setTimeOut(params.getInt(TIME).toLong())
+          .setListener(object : IThingSmartActivatorListener {
+            override fun onError(var1: String, var2: String) {
+              promise.reject(var1, var2)
+            }
 
-          /**
-           * 设备配网成功,且设备上线（手机可以直接控制），可以通过
-           */
-          override fun onActiveSuccess(var1: DeviceBean) {
-            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-          }
+            /**
+             * 设备配网成功,且设备上线（手机可以直接控制），可以通过
+             */
+            override fun onActiveSuccess(var1: DeviceBean) {
+              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+            }
 
-          /**
-           * device_find 发现设备
-          device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
-           */
-          override fun onStep(var1: String, var2: Any) {
-            // promise.reject(var1,"")
-          }
-        })
+            /**
+             * device_find 发现设备
+            device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
+             */
+            override fun onStep(var1: String, var2: Any) {
+              // promise.reject(var1,"")
+            }
+          })
 
-      mTuyaGWActivator = ThingHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
+        mTuyaGWActivator = ThingHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
     }
   }
 
