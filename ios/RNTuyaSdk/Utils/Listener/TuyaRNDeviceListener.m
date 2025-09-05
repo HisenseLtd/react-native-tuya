@@ -122,19 +122,12 @@ static inline BOOL TuyaRNDeviceListenTypeAvailable(TuyaRNDeviceListenType type) 
     return;
   }
 
-  BOOL isOnline;
-  if (device.onlineMode == 1) {
-    isOnline = NO;
-  } else {
-    isOnline = YES;
-  }
-
   NSInteger listenType = [[TuyaRNDeviceListener shareInstance].listenTypeDic[deviceId] integerValue];
   if (listenType & TuyaRNDeviceListenType_DeviceInfo) {
     NSDictionary *dic = @{
                           @"devId": deviceId,
                           @"type": @"onDevInfoUpdate",
-                          @"online": @(isOnline),
+                          @"online": @(device.deviceModel.isOnline),
                           };
     [TuyaRNEventEmitter ty_sendEvent:[kTYEventEmitterDeviceInfoEvent stringByAppendingFormat:@"//%@", deviceId] withBody:dic];
   }
