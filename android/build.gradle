@@ -48,13 +48,14 @@ configurations.all {
 }
 
 dependencies {
+    ext.tuya_sdk_version = rootProject.ext.has('tuyaSdkVersion') ? rootProject.ext.get('tuyaSdkVersion') : '6.7.3'
     implementation 'com.alibaba:fastjson:1.2.83'
     implementation 'com.facebook.react:react-native:+'
 
     // The latest stable App SDK for Android.
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.11.0'
     implementation 'com.facebook.soloader:soloader:0.10.5'
-    implementation 'com.thingclips.smart:thingsmart:6.4.0'
+    implementation "com.thingclips.smart:thingsmart:$tuya_sdk_version"
 }
 repositories {
     maven {
