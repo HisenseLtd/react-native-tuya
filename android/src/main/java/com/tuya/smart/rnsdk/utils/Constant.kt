@@ -115,13 +115,13 @@ object Constant {
     const val MATCHTYPE = "matchType"
     const val ALIASID = "aliasId"
     const val PUSHPROVIDER = "pushProvider"
-    fun getIResultCallback(promise: Promise): IResultCallback? {
+    fun getIResultCallback(promise: Promise): IResultCallback {
         return object : IResultCallback {
             override fun onSuccess() {
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }

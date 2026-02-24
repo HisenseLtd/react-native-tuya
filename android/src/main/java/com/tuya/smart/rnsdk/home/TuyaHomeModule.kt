@@ -233,7 +233,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(TuyaReactUtils.parseToWritableArray(JsonUtils.toJsonArray(var1)))
             }
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }
@@ -246,7 +246,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(TuyaReactUtils.parseToWritableMap(p0))
             }
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }
@@ -258,7 +258,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(TYCommonUtls.parseToWritableMap(p0))
             }
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }

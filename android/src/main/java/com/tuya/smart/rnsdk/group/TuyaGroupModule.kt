@@ -38,7 +38,7 @@ class TuyaGroupModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
                                     promise.resolve(p0)
                                 }
 
-                                override fun onError(p0: String?, p1: String?) {
+                                override fun onError(p0: String, p1: String) {
                                     promise.reject(p0,p1)
                                 }
                             }

@@ -186,7 +186,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
             }
 
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }
@@ -205,7 +205,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                     promise.resolve(signal)
                 }
 
-                override fun onError(errorCode: String?, errorMsg: String?) {
+                override fun onError(errorCode: String, errorMsg: String) {
                     promise.reject(errorCode, errorMsg)
                 }
             })
