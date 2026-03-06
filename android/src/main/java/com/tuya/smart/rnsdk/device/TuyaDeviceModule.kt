@@ -186,8 +186,8 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
             }
 
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
         }
     }
@@ -205,8 +205,11 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                     promise.resolve(signal)
                 }
 
-                override fun onError(errorCode: String, errorMsg: String) {
-                    promise.reject(errorCode, errorMsg)
+                override fun onError(errorCode: String?, errorMsg: String?) {
+                    promise.reject(
+                      errorCode ?: "UNKNOWN_ERROR",
+                      errorMsg
+                    )
                 }
             })
         }

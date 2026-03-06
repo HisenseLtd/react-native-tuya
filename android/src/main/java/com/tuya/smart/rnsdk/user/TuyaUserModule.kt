@@ -201,8 +201,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
 
         })
@@ -342,8 +342,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(TuyaReactUtils.parseToWritableMap(user))
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
 
         }
@@ -356,8 +356,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(TuyaReactUtils.parseToWritableMap(user))
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
 
         }
@@ -369,8 +369,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
 
         }
@@ -382,8 +382,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
         }
     }
@@ -394,8 +394,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
         }
     }
@@ -407,8 +407,8 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 promise.resolve(Constant.SUCCESS)
             }
 
-            override fun onError(code: String, error: String) {
-                promise.reject(code, error)
+            override fun onError(code: String?, error: String?) {
+                promise.reject(code ?: "UNKNOWN_ERROR", error)
             }
         }
     }
