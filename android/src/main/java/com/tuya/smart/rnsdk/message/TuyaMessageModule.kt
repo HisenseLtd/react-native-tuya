@@ -25,7 +25,7 @@ class TuyaMessageModule(reactContext: ReactApplicationContext) : ReactContextBas
                 promise.resolve(TuyaReactUtils.parseToWritableArray(JsonUtils.toJsonArray(p0!!)))
             }
 
-            override fun onError(p0: String?, p1: String?) {
+            override fun onError(p0: String, p1: String) {
                 promise.reject(p0,p1)
             }
         })
@@ -58,7 +58,7 @@ class TuyaMessageModule(reactContext: ReactApplicationContext) : ReactContextBas
                 promise.resolve(p0)
             }
 
-            override fun onError(p0: String?, p1: String?) {
+            override fun onError(p0: String, p1: String) {
                 promise.reject(p0,p1)
             }
         })

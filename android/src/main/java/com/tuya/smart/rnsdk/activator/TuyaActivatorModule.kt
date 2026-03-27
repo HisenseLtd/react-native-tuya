@@ -196,7 +196,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun openNetworkSettings(params: ReadableMap) {
-    val currentActivity = currentActivity
+    val currentActivity = reactApplicationContext.currentActivity
     if (currentActivity == null) {
       return
     }
@@ -213,12 +213,12 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
       if (ReactParamsCheck.checkParams(arrayOf(HOMEID), params)) {
         ThingHomeSdk.getActivatorInstance()
           .getActivatorToken(params.getDouble(HOMEID).toLong(), object : IThingActivatorGetToken {
-            override fun onSuccess(token: String?) {
+            override fun onSuccess(token: String) {
               promise.resolve(token);
             }
 
             override fun onFailure(errorCode: String?, errorMsg: String?) {
-              promise.reject(errorCode, errorMsg);
+              promise.reject(errorCode ?: "UNKNOWN_ERROR", errorMsg);
             }
           })
       }
@@ -240,10 +240,10 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) :
               promise.resolve(TuyaReactUtils.parseToWritableMap(devResp));
             }
 
-            override fun onQRCodeSuccess(qrcodeUrl: String?) {}
+            override fun onQRCodeSuccess(qrcodeUrl: String) {}
 
             override fun onError(errorCode: String?, errorMsg: String?) {
-              promise.reject(errorCode, errorMsg);
+              promise.reject(errorCode ?: "UNKNOWN_ERROR", errorMsg);
             }
           });
 

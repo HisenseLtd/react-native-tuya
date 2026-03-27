@@ -16,18 +16,17 @@
     "RNTuyaSdk.podspec"
   ],
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "start": "yarn tsdx watch",
+    "build": "yarn tsdx build",
+    "test": "yarn tsdx test",
+    "lint": "yarn tsdx lint"
   },
   "peerDependencies": {
     "react-native": ">=0.70.5"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "yarn tsdx lint"
     }
   },
   "prettier": {

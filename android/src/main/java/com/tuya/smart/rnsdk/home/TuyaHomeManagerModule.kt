@@ -70,7 +70,7 @@ class TuyaHomeManagerModule(reactContext: ReactApplicationContext) : ReactContex
     @ReactMethod
     fun registerThingHomeChangeListener(params: ReadableMap) {
         ThingHomeSdk.getHomeManagerInstance().registerThingHomeChangeListener(object : IThingHomeChangeListener {
-            override fun onHomeInvite(p0: Long, p1: String?) {
+            override fun onHomeInvite(p0: Long, p1: String) {
                 val map = Arguments.createMap()
                 map.putDouble("homeId", p0.toDouble())
                 map.putString("homeName", p1)
@@ -127,7 +127,7 @@ class TuyaHomeManagerModule(reactContext: ReactApplicationContext) : ReactContex
                 promise.resolve(TuyaReactUtils.parseToWritableMap(p0))
             }
 
-            override fun onError(code: String?, error: String?) {
+            override fun onError(code: String, error: String) {
                 promise.reject(code, error)
             }
         }
